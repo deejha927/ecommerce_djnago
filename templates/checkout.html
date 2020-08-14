@@ -1,0 +1,193 @@
+{% include 'navbar.html' %}
+{% load static %}
+{% static 'images' as img %}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+</head>
+<style>
+    
+    .col-des
+    {
+        box-shadow:0 10px 16px 0 rgba(111, 100, 211, 0.2),0 6px 20px 0 rgba(131, 74, 238, 0.19) !important;
+    }
+    
+    .form__field 
+    {
+    font-family: inherit;
+    width: 50%;
+    border: 0;
+    outline: 1;
+    font-size: 1.2rem;
+    padding: 1px 0;
+    transition: border-color 0.2s;
+    border-bottom-style: groove;
+    }
+    .form__field:focus 
+    {
+        padding-bottom: 3px;  
+        font-weight: 500;
+        border-width: 1px;
+    }
+    .div-size
+    {
+        height:400px;
+    }
+    .vis
+    {
+        visibility: hidden;
+    }
+</style>
+<body>
+    <br>
+    <div class="container">
+        <div class="row" >
+            <div class="col-md-6 col-des div-size" style="margin-top:50px;border: 4px outset rgba(48, 154, 224, 0.247);" >
+                <form method="POST" id="form">
+                    {% csrf_token %}
+                    <strong>User Shipping Details</strong>
+                    <hr style="height:1px;border:none;color:#333;background-color:#333;"><br>
+                    <input type="text" name="n1" placeholder="NAME." class="form__field">
+                    <input type="email" name="mail" placeholder="EMAIL." style="float:right;" class="form__field"><br><br><br>
+                    <h5><strong>Shipping Information:</strong></h5>
+                    <hr style="height:1px;border:none;color:#333;background-color:#333;"><br>
+                    <input type="text" name="address" placeholder="ADDRESS." class="form__field">
+                    <input type="text" name="city" placeholder="CITY." style="float:right;" class="form__field"><br><br>
+                    <input type="text" name="state" placeholder="STATE." class="form__field">
+                    <input type="text" name="code" placeholder="ZIP CODE." style="float:right;" class="form__field"><br><br>
+                    <input type="submit" id="form-submit" class="btn btn-block btn-success" value="CHECKOUT" >
+                </form>
+            </div>
+            <div class="col-md-6 col-des" style="margin-top:50px;border: 4px outset rgba(48, 154, 224, 0.247);">
+                <a href="cart" class="btn btn-md btn-outline-info" style="margin-top:10px;">
+                    <i class='fas fa-arrow-left' style='font-size:25px'> Back To Cart</i>
+                </a>
+                <hr style="height:1px;border:none;color:#333;background-color:#333;">
+                <h4><strong>Order Summary</strong></h4>
+                <hr style="height:1px;border:none;color:#333;background-color:#333;">
+                {% for val in items %}
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="{{img}}/{{val.product.product_image}}" class="img-thumbnail">
+                        </div>
+                        <div class="col-md-3">
+                        <strong>Product</strong><br>
+                            {{val.product.product_name}}
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Price</strong><br>
+                            ${{val.product.product_price}}
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Quantity</strong><br>
+                            <div style="margin-left:20px;">{{val.quantity}}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <hr style="height:1px;border:none;color:#333;background-color:#333;">
+                <h5><strong>Item:{{ans.cart_items}}</strong></h5>
+                <h5><strong>Total: ${{ans.cart_total}}</strong></h5>
+            </div>
+        </div>
+        <br>
+        <div class="row" id="payment" style="visibility:hidden">
+            <div class="col-md-6 col-des" style="height:auto;border: 4px outset rgba(48, 153, 224, 0.247);">
+                    <strong>Payment Information</strong>
+                    
+                    <div style="margin-top:20px;" id="paypal-button-container" ></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function payit()
+        {
+            var userdata={
+                'n1':null,
+                'mail':null,
+                'total':shipping,
+            }
+            var shippingdetails={
+                "address":null,
+                'city':null,
+                'state':null,
+                'code':null,
+
+            }
+            userdata.n1=form.n1.value;
+            userdata.mail=form.mail.value;
+            shippingdetails.address=form.address.value;
+            shippingdetails.city=form.city.value;
+            shippingdetails.state=form.state.value;
+            shippingdetails.code=form.code.value;
+            //alert(userdata.n1+" "+userdata.mail+" "+shippingdetails.address+" "+shippingdetails.city+" "+shippingdetails.state+" "+shippingdetails.code+" ");
+            var url='/placeorder'
+            fetch(url,{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json',
+                    'X-CSRFToken':csrftoken,
+                },
+                body:JSON.stringify({'userdetails':userdata,'shippingdetails':shippingdetails})
+            })
+            .then((response)=>{
+                return response.json()
+            })
+
+            .then((data)=>{
+                alert("Your Order Has Been Placed");
+                console.log("success:",data);
+                window.location.href="{% url 'home' %}";
+                
+            })
+        }
+        
+        var form=document.getElementById("form")
+        var shipping='{{ans.cart_total}}';
+        form.addEventListener('submit',function(e){
+            e.preventDefault();
+            document.getElementById("form-submit").style.visibility = 'hidden';
+            document.getElementById("payment").style.visibility = 'visible';
+            var total="{{ans.cart_total}}"
+            // Render the PayPal button into #paypal-button-container
+            paypal.Buttons({
+                style: {
+                    color:  'blue',
+                    shape:  'pill',
+                    label:  'pay',
+                    height: 40
+                },
+    
+                // Set up the transaction
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: parseFloat(total).toFixed(2)
+                            }
+                        }]
+                    });
+                },
+    
+                // Finalize the transaction
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        payit();
+                        // Show a success message to the buyer
+                        alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                    });
+                }
+    
+    
+            }).render('#paypal-button-container');
+        })
+        
+        
+       
+    </script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AUCnLjcGyC_ZFe7587R0r3UyeY3h4TEFW_K9G73NbibMUqQCPYZuKK_Kxfx3XZXflsz8_RTlc0Bx32V-&currency=USD"></script>
+
+    <script>
+       
+    </script>
+<body>

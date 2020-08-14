@@ -1,0 +1,96 @@
+{% include "navbar.html" %}
+{% load static %}
+{% static 'images' as img %}
+<html>
+    <style>
+        .arrow {
+            border: solid black;
+            border-width: 0 3px 3px 0;
+            display: inline-block;
+            padding: 3px;
+        }
+        .up {
+            transform: rotate(-135deg);
+            -webkit-transform: rotate(-135deg);
+        }
+
+        .down {
+            transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+        }
+        .row-border{
+            
+            box-shadow:0 10px 16px 0 rgba(231, 223, 223, 0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
+            margin-top:20px;
+        }
+        .size{
+            height: 100px;width: 50%;
+        }
+        .mid{
+            text-align: left;
+            margin-top:20px;
+        }
+        .thumbnail
+        {
+            width: 100%;
+            height: 200px;
+        }
+        
+    </style>
+    <body>
+        <div class="container" >
+            <div class="row row-border" style="margin-top:30px;">
+                        <div class="col-md-4 size" >
+                            <h6 style="margin-top:50px;"><strong>Total Items: {{ans.cart_items}}</strong></h6>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 style="margin-top:50px;"><strong>Total: ${{ans.cart_total}}</strong></h6>
+                        </div>
+                        <div class="col-md-4">
+                        {% if ans.cart_items == 0 %}
+                        <a href="/" style="margin-top:40px;" class="btn btn-success" >
+                                <i class='fas fa-arrow-left' style='font-size:25px'> Add Products</i>
+                            </a>
+                        {% else %}
+                            <a href="check" class="btn btn-md btn-success" style="margin-top:50px;float:right">CHECKOUT</a>
+                            {% endif %}
+                        </div>
+            </div><br>
+            {% if ans.cart_items == 0 %}
+                <img src="{% static 'images/background.gif' %}" class="img-thumbnail">
+             {% else %}
+            
+            {% for val in items %}
+           
+            <div class="row row-border">
+                <div class="col-md-4">
+                    <img src="{{img}}/{{val.product.product_image}}" class="img-thumbnail">
+                </div>
+                <div class="col-md-2">
+                    <h6><strong>Item</strong></h6>
+                    <h6 class="mid">{{val.product.product_name}}</h6>
+                </div>
+                <div class="col-md-2">
+                    <h6><strong>Price</strong></h6>
+                    <h6 class="mid">${{val.product.product_price}}</h6>
+                </div>
+                <div class="col-md-2">
+                <h6><strong>Quantity</strong></h6>
+                    <h6 style="margin-top:20px;"><div style="margin-left:21px;font: 15px Arial, sans-serif;">{{val.quantity}}</div>
+                    <button data-product={{val.product.id}} data-action="remove" class="btn btn-sm btn-dark insert-cart">-</button>
+                    <button data-product={{val.product.id}} data-action="insert" class="btn btn-sm btn-dark insert-cart">+</button>
+                    </h6>
+                    
+                </div>
+                <div class="col-md-2">
+                    <h6><strong>Total</strong></h6>
+                    <h6 class="mid">${{ val.get_total}}</h6>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        
+    </body>
+    <script src="{% static 'js/cart.js' %}"></script>
+</html>

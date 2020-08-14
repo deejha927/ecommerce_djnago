@@ -1,0 +1,44 @@
+{% include "navbar.html"%}
+{% load static %}
+{% static 'images' as img %}
+<html>
+    <head>
+        <title>HomePage</title>
+    </head>
+    <style>
+        .size{
+            height: 400px;
+            width: 100%;
+        }
+        .shadow1{
+            background: rgb(255, 255, 255);
+            box-shadow: 5px 5px 8px 0px #1f1c1ca6;
+        }
+    </style>
+    <body style="background-color:rgb(255, 255, 255);">
+        <div class="container">
+            <div class="row">
+                {% for val in pro %}
+                <div class="col-md-4 " style="margin-top:50px;">
+                   <div class="card" style="border-radius:20px 20px 0px 0px;"> 
+                        <img src="{{img}}/{{val.product_image}}" class="size card-img shadow1" style="border-radius:20px 20px 0px 0px;">
+                        <div style="font-size:25px;margin-top:30px;">
+                            {{val.product_name}}
+                            <div style="float:right;">{{val.product_price}}$</div>
+                        </div>
+                        {% if 'id'  in request.session %}
+                        <button data-product={{val.id}} data-action="insert" class="btn btn-md btn-outline-success insert-cart">Add To Cart</button>
+                        {% endif %}
+                        <a class="btn btn-md btn-outline-info " data-products={{val.id}} data-action="insert" href="{% url 'view_info' val.id %}" style="margin-top:5px;">View</a>
+                        
+                    </div>
+                </div>
+                
+                {% endfor %}
+            </div>
+        </div>
+    </body>
+    
+    
+    <script src="{% static 'js/cart.js' %}"></script>
+</html>
