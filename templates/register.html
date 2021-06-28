@@ -1,0 +1,109 @@
+{% load static %} {% include "navbar.html" %}
+<html>
+
+<head>
+    <title>Create Profile</title>
+</head>
+<style>
+    body {
+        background: url("{% static 'images/back6.jpg'%}") no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+    
+    .div1 {
+        border-radius: 10px;
+        background-color: white;
+        width: 600;
+        height: auto;
+        padding-bottom: 30px;
+    }
+    
+    .div2 {
+        background-color: rgb(5, 5, 5);
+        width: 100px;
+        height: 100px;
+    }
+    
+    .text {
+        border-width: thin;
+        border-radius: 3px;
+        border-color: rgba(178, 190, 250, 0.281);
+        background-color: rgba(178, 190, 250, 0.425);
+    }
+    
+    .text:hover {
+        border-color: rgba(66, 62, 62, 0.541);
+        background-color: rgb(255, 255, 255);
+    }
+</style>
+
+<body>
+    <div style="margin-top:50px;">
+        <img src="{% static 'images/small_pic.webp' %}" class="rounded-circle" style="margin-left:50px;width:60px;height:60px;">
+        <font style="color:white;margin-left:2px;font-weight:600;">New User</font>
+        <div class="row">
+            <div class="col-md-6 offset-md-3 div1">
+                <center>
+                    <h4 style="margin-top:10px;">Create your profile</h4>
+                    <font style="color:rgb(85, 85, 76);font-size: 15px;">This information will let us know more about you.</font>
+                    <div style="margin-top:30px;">Please tell us more about yourself.</div>
+                </center>
+                <br>
+                <div class="container-fluid">
+                    <form action="reg" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div clas="col-md-4">
+                                <img src="{% static 'images/small1.jpeg' %}" class="rounded-circle" height="200px" width="200px">
+                            </div>
+                            <div class="col-md-7" style="margin-left: 45px;margin-top:auto">
+                                <strong>First Name</strong>(required)<br>
+                                <input type="Text" name="fname" class="form-control text" placeholder="Andrew" required><br>
+                                <strong>Last Name</strong>(required)<br>
+                                <input type="Text" name="lname" class="form-control text" placeholder="Smith" required><br>
+                            </div>
+                        </div>
+                        <br>
+                        <strong>Email</strong>(required)<br>
+                        <input type="email" name="mail" class="form-control text" placeholder="Example@gmail.com" required><br>
+                        <strong>Password</strong>(required)<br>
+                        <input type="password" name="pass1" id="p1" class="form-control text" required><br>
+                        <strong>Confirm Password</strong>(required)<br>
+                        <span id="lblError"></span><br>
+                        <input type="password" name="pass2" id="p2" onkeyup="ValidateEmail();" class="form-control text" required><br>
+                        <strong>Contact Number</strong>(required)<br>
+                        <input type="text" name="contact" class="form-control text" required><br>
+
+                        <input type="submit" class="btn btn-md btn-success" value="SUBMIT" style="border-radius:30px;float:right;">
+                    </form>
+                    <font style="color:rgb(67, 243, 67);size:20px;">
+                        <center>{{msg1}}</center>
+                    </font>
+                    <font style="color:red;size:20px;">
+                        <center>{{msg}}</center>
+                    </font>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% include "footer.html"%}
+
+<script type="text/javascript">
+    function ValidateEmail() {
+        var email = document.getElementById("p1").value;
+        var pass2 = document.getElementById("p2").value;
+        var lblError = document.getElementById("lblError");
+        lblError.innerHTML = "";
+        if (email != pass2) {
+            lblError.innerHTML = "<font style='color:red;'>Password Not Matched </font>";
+        } else {
+            lblError.innerHTML = "<font style='color:green;'>Password Matched <i class='fa fa-check-circle' aria-hidden='true'></i></font>";
+        }
+    }
+</script>
+
+</html>

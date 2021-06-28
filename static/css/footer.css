@@ -1,0 +1,14 @@
+footer.page-footer {
+    margin-top: 2em;
+    color: #fff;
+}
+
+.stylish-color-dark {
+    background-color: #3e4551 !important;
+}
+
+footer a,
+footer a:hover {
+    color: white;
+    text-decoration: none;
+}

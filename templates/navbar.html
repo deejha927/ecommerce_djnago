@@ -1,0 +1,73 @@
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'Files/bootstrap.min.css' %}">
+    <script src="{% static 'Files/jquery.min.js'%}"></script>
+    <script src="{% static 'Files/popper.min.js'%}"></script>
+    <script src="{% static 'Files/bootstrap.min.js'%}"></script>
+    <script src="{% static 'Files/icon.js'%}"></script>
+    <script>
+        var user = "{{request.user}}"
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+    </script>
+</head>
+<nav class="navbar navbar-expand-sm navbar-dark fixed-top" style="background-color:#3e4551 ;">
+    <!-- Brand -->
+    <a class="navbar-brand" href="/">E-commerce</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+    <!-- Navbar links -->
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/products">Products</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            {% if 'id' in request.session %}
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                    <img src="{% static 'images/avatar.webp' %}" height="30px" width="30px">
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/logout">LOGOUT</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/cart">{{ans.get_count}}<i class='fas fa-box-open' style='font-size:25px;margin-top:4px;'></i></a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/reg">Register</a>
+            </li>
+            {% endif %}
+
+        </ul>
+    </div>
+
+</nav>
+<br>

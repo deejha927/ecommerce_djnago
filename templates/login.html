@@ -1,0 +1,49 @@
+{% include 'navbar.html' %} {% load static %}
+<html>
+<style>
+    a {
+        color: rgb(97, 107, 112);
+    }
+    
+    a:hover {
+        color: rgb(0, 0, 0);
+    }
+    
+    .size {
+        height: 110%;
+        width: 100%;
+    }
+    
+    .centered {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+
+<body>
+
+    <div class="row">
+        <div class="col-md-8">
+            <img src="{% static 'images/ecommerce.png' %}" class="size">
+        </div>
+        <div class="col-md-4" style="margin-top:100px;">
+            <form method="POST" action="/login">
+                {% csrf_token %}
+                <center><img src="{% static 'images/avatar.webp' %}" width="100" height="100"></center><br>
+                <label><strong>EMAIL</strong></label>
+                <input type="text" class="form-control" placeholder="EMAIL" name="umail"><br>
+                <label><strong>PASSWORD</strong></label>
+                <input type="password" class="form-control" placeholder="PASSWORD" name="pass"><br>
+                <input type="Submit" Value="LOGIN" class="btn btn-success btn-md"><br><br>
+                <a href="">Forgot Password?</a><a href="reg" style="float:right">Register Here</a><br><br> {{msg}}
+
+            </form>
+        </div>
+    </div>
+    {% include "footer.html"%}
+
+</body>
+
+</html>
